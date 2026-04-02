@@ -1,31 +1,24 @@
-//your code here
-const images = document.querySelectorAll(".image");
+let dragged = null;
 
-let dragSrc = null;
+const images = document.querySelectorAll("img");
 
-// When drag starts
+// Mouse down → pick element
 images.forEach(img => {
-    img.addEventListener("dragstart", function () {
-        dragSrc = this;
-        this.classList.add("selected");
-    });
+  img.addEventListener("mousedown", function () {
+    dragged = this;
+  });
+});
 
-    img.addEventListener("dragend", function () {
-        this.classList.remove("selected");
-    });
+// Mouse up → drop & swap
+images.forEach(img => {
+  img.addEventListener("mouseup", function () {
+    if (dragged && dragged !== this) {
+      const parent1 = dragged.parentNode;
+      const parent2 = this.parentNode;
 
-    // Allow drop
-    img.addEventListener("dragover", function (e) {
-        e.preventDefault();
-    });
-
-    // Drop logic (swap images)
-    img.addEventListener("drop", function () {
-        if (dragSrc !== this) {
-            // Swap background images
-            const temp = dragSrc.style.backgroundImage;
-            dragSrc.style.backgroundImage = this.style.backgroundImage;
-            this.style.backgroundImage = temp;
-        }
-    });
+      // swap images
+      parent1.appendChild(this);
+      parent2.appendChild(dragged);
+    }
+  });
 });
